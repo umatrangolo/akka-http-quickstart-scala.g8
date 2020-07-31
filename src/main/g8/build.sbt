@@ -19,7 +19,7 @@ lazy val root = (project in file(".")).
     packageName in Docker := "$docker_package_name$",
     dockerExposedPorts ++= Seq(9000),
     dockerBaseImage := "$docker_base_image$",
-    git.formattedShaVersion := git.gitHeadCommit.value map { sha => s"$sha".take(7) },    
+    git.formattedShaVersion := git.gitHeadCommit.value map { sha => s"sha".take(7) },    
     libraryDependencies ++= Seq(
       "com.typesafe.akka"     %% "akka-http"                % akkaHttpVersion,
       "com.typesafe.akka"     %% "akka-http-spray-json"     % akkaHttpVersion,
