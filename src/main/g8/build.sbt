@@ -1,11 +1,11 @@
 lazy val akkaHttpVersion   = "$akka_http_version$"
 lazy val akkaVersion       = "$akka_version$"
-lazy val catsCoreVersion   = "$cats_version$"
+lazy val catsCoreVersion   = "$cats_core_version$"
 lazy val logbackVersion    = "$logback_version$"
-lazy val logstackVersion   = "$logstash_version$"
-lazy val scalaTestVersion  = "$scalaTest_version$"
-lazy val mockitoVersion    = "$mockitoVersion$"
-lazy val scalaCheckVersion = "$scalaCheckVersion$"
+lazy val logstashVersion   = "$logstash_version$"
+lazy val scalaTestVersion  = "$scala_test_version$"
+lazy val mockitoVersion    = "$mockito_version$"
+lazy val scalaCheckVersion = "$scala_check_version$"
 
 lazy val root = (project in file(".")).
   settings(
