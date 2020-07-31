@@ -1,0 +1,14 @@
+<configuration debug="true">
+  <!-- This is a Logstash/Docker enabled logging to send logs in JSON
+       format (to be ingested by an ELK stack) -->
+  <appender name="STDOUT" target="System.out" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder class="net.logstash.logback.encoder.LogstashEncoder"/>
+  </appender>
+
+  <logger name="io.netty" level="INFO" />
+
+  <root level="INFO">
+    <appender-ref ref="STDOUT"/>
+  </root>
+
+</configuration>
