@@ -5,7 +5,7 @@ import cats.syntax.either._
 import net.logstash.logback.argument.StructuredArguments._
 import org.slf4j.LoggerFactory
 
-package defs extends envdef with serdedef
+object defs extends envdef with serdedef
 
 trait envdef {
   private val logger = LoggerFactory.getLogger("env")
@@ -19,15 +19,14 @@ trait envdef {
 
   def dieOrRight[T](msg: String, r: Either[String, T]) = r match {
     case Left(err) =>
-      logger.error(s"$msg: {}", v("error", err))
+      logger.error(s"\$msg: {}", v("error", err))
       sys.exit(1)
     case Right(t) => t
   }
 
   // Die with error code if a config is not present
-  def findOrDie[T](envKey: String, sysPropKey: String, coerce: String => Either[String, T], what: String)(
-    implicit system: ActorSystem[Nothing]
-  ) = dieOrRight(s"Error while reading \$what", find(envKey, sysPropKey, coerce))
+  def findOrDie[T](envKey: String, sysPropKey: String, coerce: String => Either[String, T], what: String) = 
+    dieOrRight(s"Error while reading \$what", find(envKey, sysPropKey, coerce))
 
   def notEmpty(s: String) = Either.cond(!s.trim.isEmpty(), s, "config is empty")
   def validURI(s: String) = Either.catchNonFatal(new java.net.URI(s)).leftMap(t => s"invalid URI (was: \$s) : \${t.getMessage}")
@@ -46,7 +45,7 @@ import java.net.URL
 import java.util.UUID
 import java.time.Instant
 
-private object serdedef extends SprayJsonSupport with DefaultJsonProtocol {
+trait serdedef extends SprayJsonSupport with DefaultJsonProtocol {
   implicit object UUIDFormat extends RootJsonFormat[UUID] {
     def write(uuid: UUID) = JsString(uuid.toString)
     def read(value: JsValue): UUID = value match {

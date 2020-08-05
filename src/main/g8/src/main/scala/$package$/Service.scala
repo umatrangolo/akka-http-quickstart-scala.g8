@@ -26,8 +26,6 @@ object Service {
     val rootBehavior = Behaviors.setup[Nothing] { context =>
       import akka.http.scaladsl.server.Directives._
       import cats.syntax.either._
-      import Config._
-      import Config.validations._
 
       implicit val system = context.system
       implicit val ec     = context.system.executionContext
