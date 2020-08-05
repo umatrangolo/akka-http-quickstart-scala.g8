@@ -2,11 +2,14 @@ package $package$
 
 import scala.util.Properties
 import cats.syntax.either._
-import scala.jdk.CollectionConverters._
+import net.logstash.logback.argument.StructuredArguments._
+import org.slf4j.LoggerFactory
 
-package object appdef extends envdef with serdedef
+package defs extends envdef with serdedef
 
-private object envdev {
+trait envdef {
+  private val logger = LoggerFactory.getLogger("env")
+
   def find[T](envKey: String, sysPropKey: String, coerce: String => Either[String, T]) =
     Properties
       .envOrNone(envKey)
@@ -14,11 +17,9 @@ private object envdev {
       .toRight(s"config \$envKey is missing")
       .flatMap(s => coerce(s))
 
-  def dieOrRight[T](msg: String, r: Either[String, T])(
-    implicit system: ActorSystem[Nothing]
-  ) = r match {
+  def dieOrRight[T](msg: String, r: Either[String, T]) = r match {
     case Left(err) =>
-      system.log.error(s"\$msg : \$err")
+      logger.error(s"$msg: {}", v("error", err))
       sys.exit(1)
     case Right(t) => t
   }
@@ -77,15 +78,6 @@ private object serdedef extends SprayJsonSupport with DefaultJsonProtocol {
       case JsString(method) =>
         HttpMethods.getForKeyCaseInsensitive(method).getOrElse(deserializationError(s"Unknown HTTP method (was \$value)"))
       case _ => deserializationError("HTTP method expected")
-    }
-  }
-
-  import Status._
-  implicit object StatusFormat extends RootJsonFormat[Status] {
-    def write(status: Status) = JsString(status.toString)
-    def read(value: JsValue): Status = value match {
-      case JsString(s) => Status.withName(s)
-      case _           => deserializationError("Status expected")
     }
   }
 

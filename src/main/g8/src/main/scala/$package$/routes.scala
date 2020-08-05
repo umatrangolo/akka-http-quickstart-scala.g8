@@ -1,22 +1,19 @@
 package $package$ 
 
 import HealthcheckActor._
-import Serde._
 import akka.actor.typed.ActorRef
 import akka.actor.typed.ActorSystem
 import akka.actor.typed.scaladsl.AskPattern._
-import akka.http.scaladsl.model.{StatusCodes, HttpMethod, HttpMethods}
-import akka.http.scaladsl.server.Directives.Authenticator
 import akka.http.scaladsl.server.Directives._
 import akka.util.Timeout
-import domain._
-import java.net.URL
 import java.{util => ju}
 import akka.http.scaladsl.model.HttpRequest
 import akka.http.scaladsl.model.HttpResponse
 import akka.http.scaladsl.server.RouteResult.Complete
 import akka.http.scaladsl.server.RouteResult.Rejected
 import scala.concurrent.duration._
+import akka.http.scaladsl.model.HttpMethod
+import defs._
 
 case class Link(href: String, rel: String, `type`: HttpMethod)
 case class Links(

@@ -1,4 +1,4 @@
-package api.webhooks
+package $package$ 
 
 import akka.actor.typed.{ActorRef, Behavior}
 import akka.actor.typed.scaladsl.Behaviors

@@ -7,9 +7,8 @@ import akka.actor.typed.scaladsl.adapter._
 import akka.http.scaladsl.Http
 import scala.concurrent.Await
 import scala.concurrent.duration._
-import scala.util.control.NonFatal
-import scala.jdk.CollectionConverters._
 import net.logstash.logback.argument.StructuredArguments._
+import akka.http.scaladsl.server.Route
 
 object Service {
   import org.slf4j.LoggerFactory
@@ -34,9 +33,7 @@ object Service {
       implicit val ec     = context.system.executionContext
 
       val service = for {
-
         healthcheckActor <- Either.right(context.spawn(HealthcheckActor(), "HealthcheckActor"))
-
         _ <- Either.right {
           context.watch(healthcheckActor)
         }
@@ -54,12 +51,11 @@ object Service {
         binding <- Either
           .catchNonFatal(Await.result(startHttpServer(routes, system), 10.seconds))
           .leftMap(t => s"Error starting server: \${t.getMessage}")
-
       } yield binding
 
       service.fold(
         { err =>
-          system.log.error("Error while initialising service: {}", value("error", err))
+          system.log.error("Error while initializing service: {}", value("error", err))
           system.terminate()
           Behaviors.empty // TODO: dead code. How to avoid it?
         }, { binding =>
@@ -71,7 +67,7 @@ object Service {
       )
     }
 
-    implicit val system = ActorSystem[Nothing](rootBehavior, "$name$Service")
+    implicit val system = ActorSystem[Nothing](rootBehavior, "$name$")
 
     CoordinatedShutdown(system).addTask(CoordinatedShutdown.PhaseBeforeActorSystemTerminate, "GoodBye") { () =>
       system.log.info("Service stopped")
