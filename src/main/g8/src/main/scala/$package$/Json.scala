@@ -1,43 +1,5 @@
 package $package$
 
-import scala.util.Properties
-import cats.syntax.either._
-import net.logstash.logback.argument.StructuredArguments._
-import org.slf4j.LoggerFactory
-
-object defs extends envdef with serdedef
-
-trait envdef {
-  private val logger = LoggerFactory.getLogger("env")
-
-  def find[T](envKey: String, sysPropKey: String, coerce: String => Either[String, T]) =
-    Properties
-      .envOrNone(envKey)
-      .orElse(Properties.propOrNone(sysPropKey))
-      .toRight(s"config \$envKey is missing")
-      .flatMap(s => coerce(s))
-
-  def dieOrRight[T](msg: String, r: Either[String, T]) = r match {
-    case Left(err) =>
-      logger.error(s"\$msg: {}", v("error", err))
-      sys.exit(1)
-    case Right(t) => t
-  }
-
-  // Die with error code if a config is not present
-  def findOrDie[T](envKey: String, sysPropKey: String, coerce: String => Either[String, T], what: String) = 
-    dieOrRight(s"Error while reading \$what", find(envKey, sysPropKey, coerce))
-
-  def notEmpty(s: String) = Either.cond(!s.trim.isEmpty(), s, "config is empty")
-  def validURI(s: String) = Either.catchNonFatal(new java.net.URI(s)).leftMap(t => s"invalid URI (was: \$s) : \${t.getMessage}")
-  def validURL(s: String) = Either.catchNonFatal(new java.net.URL(s)).leftMap(t => s"invalid URL (was: \$s) : \${t.getMessage}")
-  def validInt(s: String) =
-    Either
-      .catchNonFatal(s.toInt)
-      .leftMap(t => s"invalid int (was: \$s) : \${t.getMessage}")
-      .filterOrElse(i => i >= 0, s"int must be gte 0 (was: \$s)")
-}
-
 import akka.http.scaladsl.model.HttpMethod
 import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport
 import spray.json._
@@ -45,7 +7,9 @@ import java.net.URL
 import java.util.UUID
 import java.time.Instant
 
-trait serdedef extends SprayJsonSupport with DefaultJsonProtocol {
+object Json extends BaseJsonSupport
+
+trait BaseJsonSupport extends SprayJsonSupport with DefaultJsonProtocol {
   implicit object UUIDFormat extends RootJsonFormat[UUID] {
     def write(uuid: UUID) = JsString(uuid.toString)
     def read(value: JsValue): UUID = value match {

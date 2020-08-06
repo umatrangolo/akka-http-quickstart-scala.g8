@@ -1,4 +1,4 @@
-package $package$ 
+package $package$
 
 import akka.actor.CoordinatedShutdown
 import akka.actor.typed.ActorSystem
@@ -7,12 +7,12 @@ import akka.actor.typed.scaladsl.adapter._
 import akka.http.scaladsl.Http
 import scala.concurrent.Await
 import scala.concurrent.duration._
-import net.logstash.logback.argument.StructuredArguments._
 import akka.http.scaladsl.server.Route
+import org.slf4j.LoggerFactory
+import net.logstash.logback.argument.StructuredArguments._
 
 object Service {
-  import org.slf4j.LoggerFactory
-  val logger = LoggerFactory.getLogger("access-log")
+  val logger = LoggerFactory.getLogger(this.getClass)
 
   private def startHttpServer(routes: Route, system: ActorSystem[_]) = {
     implicit val classicSystem: akka.actor.ActorSystem = system.toClassic
@@ -21,6 +21,7 @@ object Service {
   }
 
   def main(args: Array[String]): Unit = {
+
     // Here we wire up the app by spawning all the actors and putting
     // them under the guardian one.
     val rootBehavior = Behaviors.setup[Nothing] { context =>
@@ -37,7 +38,7 @@ object Service {
         }
 
         routes <- Either.right {
-          Route.seal(AccessLog.logTimedRequestResponse {
+          Route.seal(Access.logTimedRequestResponse {
             handleRejections(Handlers.jsonifyRejectionHandler) {
               concat(
                 new HealthcheckRoutes(healthcheckActor).routes,
@@ -53,13 +54,12 @@ object Service {
 
       service.fold(
         { err =>
-          system.log.error("Error while initializing service: {}", value("error", err))
+          logger.error("Error while initializing service: {}", value("error", err))
           system.terminate()
           Behaviors.empty // TODO: dead code. How to avoid it?
         }, { binding =>
           val localAddress = binding.localAddress
-          system.log
-            .info("Server online at http://{}:{}/", value("host", localAddress.getHostString), value("port", localAddress.getPort))
+          logger.info("Server online at http://{}:{}/", value("host", localAddress.getHostString), value("port", localAddress.getPort))
           Behaviors.empty
         }
       )
@@ -68,7 +68,7 @@ object Service {
     implicit val system = ActorSystem[Nothing](rootBehavior, "$name$")
 
     CoordinatedShutdown(system).addTask(CoordinatedShutdown.PhaseBeforeActorSystemTerminate, "GoodBye") { () =>
-      system.log.info("Service stopped")
+      logger.info("Service stopped")
       scala.concurrent.Future.successful(akka.Done)
     }
   }

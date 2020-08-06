@@ -1,26 +1,15 @@
-package $package$ 
+package $package$
 
 import akka.actor.testkit.typed.scaladsl.ActorTestKit
 import akka.actor.typed.scaladsl.adapter._
 import akka.http.scaladsl.model._
 import akka.http.scaladsl.testkit.ScalatestRouteTest
-import domain._
-import java.net.URL
-import java.time.Instant
-import java.util.UUID
-import org.mockito.ArgumentMatchers._
-import org.mockito.Mockito._
 import org.scalatest.prop._
-import pdi.jwt.JwtAlgorithm.HS384
-import pdi.jwt._
-import repository._
-import scala.concurrent._
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
-import scala.annotation.nowarn
 
-@nowarn class RoutesSpec
+class RoutesSpec
     extends AnyWordSpec
     with Matchers
     with ScalaFutures

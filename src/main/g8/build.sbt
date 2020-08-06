@@ -19,7 +19,7 @@ lazy val root = (project in file(".")).
     packageName in Docker := "$docker_package_name$",
     dockerExposedPorts ++= Seq(9000),
     dockerBaseImage := "$docker_base_image$",
-    git.formattedShaVersion := git.gitHeadCommit.value map { sha => s"sha".take(7) },    
+    git.formattedShaVersion := git.gitHeadCommit.value map { sha => s"sha".take(7) },
     libraryDependencies ++= Seq(
       "com.typesafe.akka"     %% "akka-http"                % akkaHttpVersion,
       "com.typesafe.akka"     %% "akka-http-spray-json"     % akkaHttpVersion,
@@ -32,7 +32,7 @@ lazy val root = (project in file(".")).
       "com.typesafe.akka"     %% "akka-actor-testkit-typed" % akkaVersion       % Test,
       "com.typesafe.akka"     %% "akka-stream-testkit"      % akkaVersion       % Test,
       "org.mockito"            % "mockito-core"             % mockitoVersion    % Test,
-      "org.scalacheck"        %% "scalacheck"               % scalaCheckVersion % Test,      
+      "org.scalacheck"        %% "scalacheck"               % scalaCheckVersion % Test,
       "org.scalatest"         %% "scalatest"                % scalaTestVersion  % Test
     ),
     scalacOptions ++= Seq(
@@ -53,7 +53,7 @@ lazy val root = (project in file(".")).
       "-Xlint:nonlocal-return",
       "-Xlint:deprecation",
       "-Wconf:src=src_managed/.*:s"
-    )    
+    )
   )
   .enablePlugins(GitVersioning)
   .enablePlugins(JavaServerAppPackaging)
