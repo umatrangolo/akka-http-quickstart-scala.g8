@@ -4,12 +4,11 @@ import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.model.{ HttpRequest, HttpResponse }
 import akka.http.scaladsl.server.RouteResult.{ Complete, Rejected }
 import scala.concurrent.duration._
+import akka.http.scaladsl.server._
+import net.logstash.logback.argument.StructuredArguments._
+import org.slf4j.LoggerFactory
 
 object Access {
-  import akka.http.scaladsl.server._
-  import net.logstash.logback.argument.StructuredArguments._
-  import org.slf4j.LoggerFactory
-
   private val logger = LoggerFactory.getLogger("access")
 
   private object domain {
