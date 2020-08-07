@@ -16,8 +16,7 @@ object Service {
 
   private def startHttpServer(routes: Route, system: ActorSystem[_]) = {
     implicit val classicSystem: akka.actor.ActorSystem = system.toClassic
-    import system.executionContext
-    Http().bindAndHandle(routes, "0.0.0.0", 9000)
+    Http().newServerAt("0.0.0.0", 9000).bind(routes)
   }
 
   def main(args: Array[String]): Unit = {

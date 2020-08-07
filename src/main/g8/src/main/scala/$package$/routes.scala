@@ -30,8 +30,7 @@ object Handlers {
 
           // we copy the response in order to keep all headers and status code, wrapping the message as hand rolled JSON
           // you could the entity using your favourite marshalling library (e.g. spray json or anything else)
-          res.copy(entity = HttpEntity(ContentTypes.`application/json`, s"""{"error": "\$message"}"""))
-
+          res.withEntity(HttpEntity(ContentTypes.`application/json`, s"""{"error": "\$message"}"""))
         case x => x // pass through all other types of responses
       }
 }
