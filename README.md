@@ -1,47 +1,58 @@
-## Akka HTTP quickstart in Scala
+# Akka HTTP quickstart 
 
-Please see the [quickstart guide](https://developer.lightbend.com/guides/akka-http-quickstart-scala/) for a
-walk through the code.
+Opinionated fork of the Lightbend Akka HTTP g8 template.
 
-You can use [Giter8][g8] to create your own project from the quickstart. Alternatively, you can download
-a packaged version of this project by clicking "Create a project for me!" on the
-[Lightbend Getting Started](https://developer.lightbend.com/start/?group=akka&project=akka-http-quickstart-scala)
-page.
+## Usage 
 
 Prerequisites:
-- JDK 8
-- sbt 0.13.13 or higher
+- JDK 8+
+- sbt 1.13.13+ 
 
-Open a console and run the following command to apply this template:
- ```
-sbt -Dsbt.version=1.2.8 new akka/akka-http-quickstart-scala.g8
- ```
+In the console, type:
 
-This template will prompt for the following parameters. Press `Enter` if the default values suit you:
-- `name`: Becomes the name of the project.
-- `scala_version`: Specifies the Scala version for this project.
-- `akka_http_version`: Specifies which version of Akka HTTP should be used for this project.
-- `akka_version`: Specifies which version of Akka should be used for this project. Must be at least 2.6.0.
-- `organization`: Specifies the organization for this project.
+```sh
+sbt -Dsbt.version=1.3.13 new umatrangolo/akka-http-quickstart-scala.g8
+```
 
-The template comes with the following sources:
+This template will prompt for the following parameters:
 
-* `QuickstartApp.scala` -- contains the main method which bootstraps the application 
-* `UserRoutes.scala` -- Akka HTTP `routes` defining exposed endpoints
-* `UserRegistry.scala` -- the actor which handles the registration requests
-* `JsonFormats.scala` -- converts the JSON data from requests into Scala types and from Scala types into JSON responses
+| Name | Description |
+|------|-------------|
+|name  | Becomes the name of the project |
+|organization | The organization owning this app |
+|package | Starting package |
+|docker_maintainer| email of the maintainer of this app |
+|docker_package_name| Specifies the package name for Docker | 
 
 Once inside the project folder use the following command to run the code:
+
+## Running
+
+The minimal service will start out of the box with
+
 ```
 sbt run
 ```
 
-Template license
-----------------
-Written in 2017 by Lightbend, Inc.
+You can also build a Docker image with:
 
-To the extent possible under law, the author(s) have dedicated all copyright and related
-and neighboring rights to this template to the public domain worldwide.
-This template is distributed without any warranty. See <http://creativecommons.org/publicdomain/zero/1.0/>.
+```
+sbt docker:publishLocal
+```
 
-[g8]: http://www.foundweekends.org/giter8/
+and run it with:
+
+
+```
+docker run --rm -P $package/$name:latest 
+```
+
+The service will listen on port 9000 with a basic healthcheck:
+
+```
+curl localhost:9000/health
+```
+
+## References
+
+[g8](http://www.foundweekends.org/giter8/)
