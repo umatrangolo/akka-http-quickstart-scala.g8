@@ -1,8 +1,8 @@
-# Akka HTTP quickstart 
+## Akka HTTP quickstart 
 
 Opinionated fork of the Lightbend Akka HTTP g8 template.
 
-## Usage 
+### Usage 
 
 Prerequisites:
 - JDK 8+
@@ -21,12 +21,10 @@ This template will prompt for the following parameters:
 |name  | Becomes the name of the project |
 |organization | The organization owning this app |
 |package | Starting package |
-|docker_maintainer| email of the maintainer of this app |
+|docker_maintainer| Email of the maintainer of this app |
 |docker_package_name| Specifies the package name for Docker | 
 
-Once inside the project folder use the following command to run the code:
-
-## Running
+### Running
 
 The minimal service will start out of the box with
 
@@ -41,7 +39,6 @@ sbt docker:publishLocal
 ```
 
 and run it with:
-
 
 ```
 docker run --rm -P $package/$name:latest 
