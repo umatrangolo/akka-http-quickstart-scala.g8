@@ -6,6 +6,7 @@ lazy val logstashVersion   = "$logstash_version$"
 lazy val scalaTestVersion  = "$scala_test_version$"
 lazy val mockitoVersion    = "$mockito_version$"
 lazy val scalaCheckVersion = "$scala_check_version$"
+lazy val fasterXmlVersion  = "$faster_xml_version$"
 
 lazy val root = (project in file(".")).
   settings(
@@ -21,20 +22,23 @@ lazy val root = (project in file(".")).
     dockerBaseImage := "$docker_base_image$",
     git.formattedShaVersion := git.gitHeadCommit.value map { sha => s"\$sha".take(7) },
     libraryDependencies ++= Seq(
-      "com.typesafe.akka"     %% "akka-http"                % akkaHttpVersion,
-      "com.typesafe.akka"     %% "akka-http-spray-json"     % akkaHttpVersion,
-      "com.typesafe.akka"     %% "akka-actor-typed"         % akkaVersion,
-      "com.typesafe.akka"     %% "akka-stream"              % akkaVersion,
-      "ch.qos.logback"        %  "logback-classic"          % logbackVersion,
-      "net.logstash.logback"  %  "logstash-logback-encoder" % logstashVersion,
-      "org.typelevel"         %% "cats-core"                % catsCoreVersion,
-      "com.typesafe.akka"     %% "akka-http-testkit"        % akkaHttpVersion   % Test,
-      "com.typesafe.akka"     %% "akka-actor-testkit-typed" % akkaVersion       % Test,
-      "com.typesafe.akka"     %% "akka-stream-testkit"      % akkaVersion       % Test,
-      "org.mockito"            % "mockito-core"             % mockitoVersion    % Test,
-      "org.scalacheck"        %% "scalacheck"               % scalaCheckVersion % Test,
-      "org.scalatest"         %% "scalatest"                % scalaTestVersion  % Test
-    ),
+      "com.typesafe.akka"            %% "akka-http"                 % akkaHttpVersion,
+      "com.typesafe.akka"            %% "akka-http-spray-json"      % akkaHttpVersion,
+      "com.typesafe.akka"            %% "akka-actor-typed"          % akkaVersion,
+      "com.typesafe.akka"            %% "akka-stream"               % akkaVersion,
+      "ch.qos.logback"                % "logback-classic"           % logbackVersion,
+      "net.logstash.logback"          % "logstash-logback-encoder"  % logstashVersion,
+      "org.typelevel"                %% "cats-core"                 % catsCoreVersion,
+      "com.typesafe.akka"            %% "akka-http-testkit"         % akkaHttpVersion   % Test,
+      "com.typesafe.akka"            %% "akka-actor-testkit-typed"  % akkaVersion       % Test,
+      "com.typesafe.akka"            %% "akka-stream-testkit"       % akkaVersion       % Test,
+      "org.mockito"                   % "mockito-core"              % mockitoVersion    % Test,
+      "org.scalacheck"               %% "scalacheck"                % scalaCheckVersion % Test,
+      "org.scalatest"                %% "scalatest"                 % scalaTestVersion  % Test,
+
+      // Only needed to json marshal objects into logging directives
+      "com.fasterxml.jackson.module"  % "jackson-module-scala_2.13" % fasterXmlVersion
+),
     scalacOptions ++= Seq(
       "-encoding",
       "UTF-8",
